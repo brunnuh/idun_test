@@ -1,4 +1,0 @@
-
-class IdunData extends Equatable{
-
-}

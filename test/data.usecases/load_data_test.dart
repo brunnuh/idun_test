@@ -1,12 +1,12 @@
-import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:idun_test/data/http/http.dart';
-import 'package:idun_test/data/http/http_error.dart';
-import 'package:idun_test/data/usecases/load_data.dart';
-import 'package:idun_test/domain/entities/idun_data_entity.dart';
-import 'package:idun_test/domain/helpers/domain_error.dart';
-
+import 'package:faker/faker.dart';
 import 'package:mocktail/mocktail.dart';
+
+import 'package:idun_test/data/http/http.dart';
+import 'package:idun_test/data/usecases/usecases.dart';
+
+import 'package:idun_test/domain/entities/entities.dart';
+import 'package:idun_test/domain/helpers/helpers.dart';
 
 
 class HttpClientSpy extends Mock implements HttpClient<List<Map>> {}
@@ -32,7 +32,7 @@ void main() {
         }
       ];
   When mockRequest() {
-    return when(() => httpclient.request(url: any(named: "url"), method: any(named: "method")));
+    return when(()=>httpclient.request(url: any(named: "url"), method: any(named: "method")));
   }
 
   void mockHttpData(List<Map> list) {
@@ -43,7 +43,6 @@ void main() {
   void mockHttpError(HttpError error){
     mockRequest().thenThrow(error);
   }
-
 
 
   setUp(() {
@@ -59,7 +58,7 @@ void main() {
   test('Should call request client with correct values', () async {
     await sut.call();
 
-    verify(() => httpclient.request(url: url, method: 'get')).called(1);
+    verify(() => httpclient.request(url: url, method: 'get'));
   });
 
   test("Should return Idun data on 200", () async {

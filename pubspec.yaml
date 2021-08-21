@@ -14,14 +14,17 @@ dependencies:
 
   cupertino_icons: ^1.0.2
   equatable: ^2.0.3
+  dio: ^4.0.0
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   test:
-  mocktail: ^0.1.4
+  mocktail:
   faker:
+  build_runner:
 
 
 

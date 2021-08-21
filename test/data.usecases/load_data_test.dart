@@ -1,4 +1,6 @@
 import 'package:faker/faker.dart';
+import 'package:idun_test/data/client/client.dart';
+import 'package:idun_test/domain/helpers/helpers.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
@@ -15,8 +17,12 @@ class LoadData {
   LoadData({required this.client, required this.url});
 
   Future<List<IdunDataEntity>> call() async {
-    final response = await client.request(url: url, method: 'get');
-    return response.map((json) => DataModel.fromJson(json).toEntity()).toList();
+    try{
+      final response = await client.request(url: url, method: 'get');
+      return response.map((json) => DataModel.fromJson(json).toEntity()).toList();
+    }on ClientError{
+      throw DomainError.Unexpected;
+    }
   }
 }
 
@@ -52,6 +58,8 @@ void main() {
         list);
   }
 
+  
+
   setUp(() {
     url = faker.internet.httpsUrl();
     client = ClientSpy();
@@ -69,12 +77,19 @@ void main() {
   });
 
   test("Should return Idun data on 200", () async {
-    
         final response = await sut.call();
 
         expect(response, [
           IdunDataEntity(guid: list[0]['guid'], date: DateTime.parse(list[0]['date']), text: list[0]['text']),
           IdunDataEntity(guid: list[1]['guid'], date: DateTime.parse(list[1]['date']), text: list[1]['text']),
         ]);
+  });
+
+  test("Should throw UnexpectError if Client return 200 with invalid data", () {
+    mockHttpData([{"key_invalid" : "value_invalid"}]);
+
+    final future = sut.call();
+
+    expect(future, throwsA(DomainError.Unexpected));
   });
 }

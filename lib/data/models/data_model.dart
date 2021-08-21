@@ -1,4 +1,5 @@
 import 'package:idun_test/domain/entities/entities.dart';
+import '../client/client.dart';
 
 class DataModel {
   final String guid;
@@ -12,6 +13,9 @@ class DataModel {
   });
 
   factory DataModel.fromJson(Map json) {
+    if(!json.keys.toSet().containsAll(['guid', 'text', 'date'])){
+      throw ClientError.invalidData;
+    }
     return DataModel(
         guid: json['guid'], text: json['text'], date: json['date']);
   }

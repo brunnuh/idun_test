@@ -22,7 +22,6 @@ dev_dependencies:
   test:
   mocktail: ^0.1.4
   faker:
-  build_runner: ^2.1.1
 
 
 

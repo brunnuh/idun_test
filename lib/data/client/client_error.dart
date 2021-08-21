@@ -1,3 +1,4 @@
 enum ClientError{
-  invalidData
+  invalidData,
+  NotFound,
 }

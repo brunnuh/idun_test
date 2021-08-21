@@ -52,13 +52,20 @@ void main() {
           'date': faker.date.dateTime().toIso8601String(),
         }
       ];
+  When mockRequest() {
+    return when(() => client.request(url: any(named: "url"), method: any(named: "method")));
+  }
 
   void mockHttpData(List<Map> list) {
-    when(() => client.request(url: any(named: "url"), method: any(named: "method"),)).thenAnswer((_) async =>
+    mockRequest().thenAnswer((_) async =>
         list);
   }
 
-  
+  void mockHttpError(ClientError error){
+    mockRequest().thenThrow(error);
+  }
+
+
 
   setUp(() {
     url = faker.internet.httpsUrl();
@@ -92,4 +99,14 @@ void main() {
 
     expect(future, throwsA(DomainError.Unexpected));
   });
+
+  test("should return client error 404 with invalid url", () async {
+    mockHttpError(ClientError.NotFound);
+
+    final future = sut.call();
+
+    expect(future, throwsA(DomainError.Unexpected));
+  });
+
+
 }

@@ -1,4 +1,4 @@
-enum ClientError{
+enum HttpError{
   invalidData,
   NotFound,
 }

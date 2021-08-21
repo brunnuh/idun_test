@@ -1,5 +1,5 @@
 import '../entities/entities.dart';
 
-abstract class LoadData{
+abstract class ILoadData{
   Future<List<IdunDataEntity>> call();
 }

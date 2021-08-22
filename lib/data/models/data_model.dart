@@ -12,7 +12,7 @@ class DataModel {
     required this.date,
   });
 
-  factory DataModel.fromJson(Map json) {
+  factory DataModel.fromJson(Map<String, dynamic> json) {
     if(!json.keys.toSet().containsAll(['guid', 'text', 'date'])){
       throw HttpError.invalidData;
     }

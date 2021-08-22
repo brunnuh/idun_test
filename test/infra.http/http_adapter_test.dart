@@ -15,16 +15,14 @@ class HttpAdapter {
 
   HttpAdapter(this.client);
 
-  Future<List<IdunDataEntity>> request({required String url, required String method}) async {
+  Future request({required String url, required String method}) async {
     var response = await client.get(url);
     return _handleResponse(response);
   }
 
-  List<IdunDataEntity> _handleResponse(Response response) {
+  List _handleResponse(Response response) {
     if (response.data != null && response.statusCode == 200) {
-      List<IdunDataEntity> listData = [];
-      jsonDecode(response.data).forEach((e) => listData.add(DataModel.fromJson(e).toEntity()));
-      return listData;
+      return jsonDecode(response.data);
     } else if (response.statusCode == 404) {
       throw HttpError.NotFound;
     } else {

@@ -24,6 +24,21 @@ mixin _$MobxListIdunPresenter on _MobxListIdunPresenter, Store {
     });
   }
 
+  final _$erroAtom = Atom(name: '_MobxListIdunPresenter.erro');
+
+  @override
+  String? get erro {
+    _$erroAtom.reportRead();
+    return super.erro;
+  }
+
+  @override
+  set erro(String? value) {
+    _$erroAtom.reportWrite(value, super.erro, () {
+      super.erro = value;
+    });
+  }
+
   final _$getListPostsAsyncAction =
       AsyncAction('_MobxListIdunPresenter.getListPosts');
 
@@ -35,7 +50,8 @@ mixin _$MobxListIdunPresenter on _MobxListIdunPresenter, Store {
   @override
   String toString() {
     return '''
-isLoading: ${isLoading}
+isLoading: ${isLoading},
+erro: ${erro}
     ''';
   }
 }

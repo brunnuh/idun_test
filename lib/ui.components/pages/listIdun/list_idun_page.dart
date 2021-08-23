@@ -5,9 +5,17 @@ import 'package:get_it/get_it.dart';
 import 'package:idun_test/presentation/presenters/mobx_list_idun_presenter.dart';
 
 import 'package:idun_test/ui.components/pages/listIdun/components/list_item_component.dart';
+import 'package:mobx/mobx.dart';
 
-class ListIdunPage extends StatelessWidget {
-  MobxListIdunPresenter listIdunPresenter =
+import 'components/show_erro_message.dart';
+
+class ListIdunPage extends StatefulWidget {
+  @override
+  _ListIdunPageState createState() => _ListIdunPageState();
+}
+
+class _ListIdunPageState extends State<ListIdunPage> {
+  MobxListIdunPresenter mobxlistIdunPresenter =
       GetIt.instance<MobxListIdunPresenter>();
 
   @override
@@ -16,14 +24,29 @@ class ListIdunPage extends StatelessWidget {
       appBar: AppBar(
         title: Text("Lista de Postagens"),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: mobxlistIdunPresenter.getListPosts,
+            icon: Icon(Icons.update),
+          )
+        ],
       ),
       body: Observer(
         builder: (_) {
+          if (mobxlistIdunPresenter.isLoading) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (mobxlistIdunPresenter.erro != null &&
+              mobxlistIdunPresenter.erro!.isNotEmpty) {
+            showErrorMessage(context, mobxlistIdunPresenter.erro!);
+          }
           return ListView.builder(
-            itemCount: listIdunPresenter.listPostsStream.length,
+            itemCount: mobxlistIdunPresenter.listPostsStream.length,
             itemBuilder: (_, index) {
               return ListItemComponent(
-                  dataModel: listIdunPresenter.listPostsStream[index]);
+                  dataModel: mobxlistIdunPresenter.listPostsStream[index]);
             },
           );
         },

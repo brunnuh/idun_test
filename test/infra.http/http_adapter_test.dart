@@ -2,29 +2,10 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:faker/faker.dart';
 import 'package:idun_test/data/http/http.dart';
+import 'package:idun_test/infra/http/http_adapter.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-class HttpAdapter {
-  final Dio client;
-
-  HttpAdapter(this.client);
-
-  Future request({required String url, required String method}) async {
-    var response = await client.get(url);
-    return _handleResponse(response);
-  }
-
-  List _handleResponse(Response response) {
-    if (response.data != null && response.statusCode == 200) {
-      return jsonDecode(response.data);
-    } else if (response.statusCode == 404) {
-      throw HttpError.NotFound;
-    } else {
-      throw HttpError.serverError;
-    }
-  }
-}
 
 class HttpAdapterSpy extends Mock implements Dio {}
 
@@ -47,14 +28,14 @@ void main() {
         .thenAnswer((_) async => Response(
             statusCode: statuscode,
             requestOptions: RequestOptions(path: url),
-            data: jsonEncode(listIdunResponse)));
+            data: listIdunResponse));
   }
 
   group("get", () {
     setUp(() {
       url = faker.internet.httpUrl();
       client = HttpAdapterSpy();
-      sut = HttpAdapter(client);
+      sut = HttpAdapter(client: client);
       mockResponse(url: url);
     });
 

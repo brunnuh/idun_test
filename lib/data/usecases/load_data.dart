@@ -7,15 +7,19 @@ import '../../data/models/data_model.dart';
 import '../../data/http/http.dart';
 
 class LoadData implements ILoadData{
-  final HttpClient<List<Map>> httpclient;
+  final HttpClient httpclient;
   final String url;
 
   LoadData({required this.httpclient, required this.url});
 
   Future<List<IdunDataEntity>> call() async {
     try{
+      List<IdunDataEntity> listResponse = [];
       final response = await httpclient.request(url: url, method: 'get');
-      return response.map((json) => DataModel.fromJson(json).toEntity()).toList();
+      response.forEach((json){
+        listResponse.add(DataModel.fromJson(json).toEntity());
+      });
+      return listResponse;
     }on HttpError{
       throw DomainError.Unexpected;
     }

@@ -1,4 +1,5 @@
-import 'package:idun_test/domain/entities/entities.dart';
+import '../../domain/entities/entities.dart';
+
 import '../http/http.dart';
 
 class DataModel {

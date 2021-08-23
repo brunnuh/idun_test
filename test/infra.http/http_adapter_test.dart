@@ -1,12 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:faker/faker.dart';
 import 'package:idun_test/data/http/http.dart';
-import 'package:idun_test/data/models/data_model.dart';
-import 'package:idun_test/domain/entities/entities.dart';
-import 'package:idun_test/domain/helpers/domain_error.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 

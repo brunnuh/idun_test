@@ -11,7 +11,7 @@ class HttpAdapter implements HttpClient{
 
 
   _handleResponse(Response response) {
-    if (response.data != null && response.statusCode == 201) {
+    if (response.data != null && response.statusCode == 200 || response.statusCode == 201) {
       return response.data;
     } else if (response.statusCode == 404) {
       throw HttpError.NotFound;

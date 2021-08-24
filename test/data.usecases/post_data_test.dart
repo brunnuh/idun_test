@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:faker/faker.dart';
+import 'package:idun_test/data/models/data_model.dart';
 import 'package:idun_test/domain/helpers/domain_error.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
@@ -16,9 +19,11 @@ class PostData {
 
   PostData({required this.httpclient, required this.url});
 
-  Future create({required IdunDataEntity entity}) async {
+  Future<IdunDataEntity> create({required IdunDataEntity entity}) async {
     try {
-      await httpclient.request(url: url, method: 'post');
+      final body = DataModel.fromDomain(entity).toJson();
+      final response = await httpclient.request(url: url, method: 'post', body: body);
+      return DataModel.fromJson(response).toEntity();
     } on HttpError catch (e) {
       throw e == HttpError.badRequest
           ? DomainError.invalidFields
@@ -34,14 +39,16 @@ void main() {
   late String url;
   late PostData sut;
   late IdunDataEntity idunDataEntity;
+  late Map body;
 
   When mockRequest() {
-    return when(() => httpclient.request(
-        url: any(named: "url"), method: any(named: "method")));
+
+      return when(() => httpclient.request(
+          url: any(named: "url"), method: any(named: "method"), body: body));
   }
 
   void mockHttpData() {
-    mockRequest().thenAnswer((_) async => idunDataEntity);
+    mockRequest().thenAnswer((_) async => DataModel.fromDomain(idunDataEntity).toJson());
   }
 
   void mockHttpError(HttpError error) {
@@ -57,13 +64,14 @@ void main() {
       text: faker.lorem.sentence(),
       date: DateTime.now(),
     );
+    body = DataModel.fromDomain(idunDataEntity).toJson();
     mockHttpData();
   });
 
   test('Should call request client with correct value', () async {
     await sut.create(entity: idunDataEntity);
 
-    verify(() => httpclient.request(url: url, method: 'post'));
+    verify(() => httpclient.request(url: url, method: 'post', body: body));
   });
 
   test('should return client error 400 invalid fields ', () async {
@@ -80,5 +88,11 @@ void main() {
     final future = sut.create(entity: idunDataEntity);
 
     expect(future, throwsA(DomainError.Unexpected));
+  });
+
+  test("should return idun entity on client return 201", () async {
+    final response = await sut.create(entity: idunDataEntity);
+
+    expect(response, idunDataEntity);
   });
 }

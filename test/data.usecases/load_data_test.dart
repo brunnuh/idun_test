@@ -61,7 +61,7 @@ void main() {
     verify(() => httpclient.request(url: url, method: 'get'));
   });
 
-  test("Should return Idun data on 200", () async {
+  test("Should return Idun data on 201", () async {
     final response = await sut.call();
 
     expect(response, [
@@ -70,7 +70,7 @@ void main() {
     ]);
   });
 
-  test("Should throw UnexpectError if Client return 200 with invalid data", () {
+  test("Should throw UnexpectError if Client return 201 with invalid data", () {
     mockHttpData([{"key_invalid" : "value_invalid"}]);
 
     final future = sut.call();

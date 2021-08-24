@@ -46,5 +46,10 @@ void main() {
     mockHttpData();
   });
 
+  test('Should call request client with correct value', () async {
 
+    await sout.create(entity: idunDataEntity);
+
+    verify(() => httpclient.request(url: url, method: 'post'));
+  });
 }

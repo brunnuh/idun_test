@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:idun_test/presentation/presenters/mobx_list_idun_presenter.dart';
+import 'package:idun_test/ui.components/pages/formIdun/form_idun_page.dart';
 
 import 'package:idun_test/ui.components/pages/listIdun/components/list_item_component.dart';
 import 'package:mobx/mobx.dart';
@@ -50,6 +52,14 @@ class _ListIdunPageState extends State<ListIdunPage> {
             },
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.of(context).push(
+          CupertinoPageRoute(
+            builder: (_) => FormIdunPage(),
+          ),
+        ),
+        child: Icon(Icons.send),
       ),
     );
   }

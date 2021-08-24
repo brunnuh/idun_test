@@ -6,7 +6,6 @@ import 'package:idun_test/infra/http/http_adapter.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-
 class HttpAdapterSpy extends Mock implements Dio {}
 
 void main() {
@@ -22,13 +21,10 @@ void main() {
   ];
 
   void mockResponse({int statuscode = 200, required String url}) {
-    when(() => client.get(
-              url,
-            ))
-        .thenAnswer((_) async => Response(
-            statusCode: statuscode,
-            requestOptions: RequestOptions(path: url),
-            data: listIdunResponse));
+    when(() => client.get(url)).thenAnswer((_) async => Response(
+        statusCode: statuscode,
+        requestOptions: RequestOptions(path: url),
+        data: listIdunResponse));
   }
 
   group("get", () {
@@ -53,4 +49,6 @@ void main() {
       expect(future, throwsA(HttpError.NotFound));
     });
   });
+
+  group("post", () {});
 }

@@ -1,36 +1,14 @@
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
 import 'package:faker/faker.dart';
-import 'package:idun_test/data/models/data_model.dart';
-import 'package:idun_test/domain/helpers/domain_error.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-import 'package:idun_test/data/http/http.dart';
-
-import 'package:idun_test/infra/http/http.dart';
-
+import 'package:idun_test/domain/helpers/helpers.dart';
+import 'package:idun_test/data/usecases/usecases.dart';
 import 'package:idun_test/domain/entities/entities.dart';
 
-class PostData {
-  final HttpClient httpclient;
-  final String url;
+import 'package:idun_test/data/models/data_model.dart';
+import 'package:idun_test/data/http/http.dart';
 
-  PostData({required this.httpclient, required this.url});
-
-  Future<IdunDataEntity> create({required IdunDataEntity entity}) async {
-    try {
-      final body = DataModel.fromDomain(entity).toJson();
-      final response = await httpclient.request(url: url, method: 'post', body: body);
-      return DataModel.fromJson(response).toEntity();
-    } on HttpError catch (e) {
-      throw e == HttpError.badRequest
-          ? DomainError.invalidFields
-          : DomainError.Unexpected;
-    }
-  }
-}
 
 class HttpClientSpy extends Mock implements HttpClient {}
 
@@ -42,7 +20,6 @@ void main() {
   late Map body;
 
   When mockRequest() {
-
       return when(() => httpclient.request(
           url: any(named: "url"), method: any(named: "method"), body: body));
   }

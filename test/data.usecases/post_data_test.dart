@@ -1,12 +1,14 @@
+import 'package:dio/dio.dart';
 import 'package:faker/faker.dart';
-import 'package:idun_test/data/http/http.dart';
+import 'package:idun_test/domain/helpers/domain_error.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-import 'package:idun_test/domain/entities/entities.dart';
-import 'package:idun_test/domain/usecases/usecases.dart';
+import 'package:idun_test/data/http/http.dart';
 
-class HttpClientSpy extends Mock implements HttpClient{}
+import 'package:idun_test/infra/http/http.dart';
+
+import 'package:idun_test/domain/entities/entities.dart';
 
 class PostData {
   final HttpClient httpclient;
@@ -15,26 +17,38 @@ class PostData {
   PostData({required this.httpclient, required this.url});
 
   Future create({required IdunDataEntity entity}) async {
-    await httpclient.request(url: url, method: 'post');
+    try {
+      await httpclient.request(url: url, method: 'post');
+    } on HttpError catch (e) {
+      throw e == HttpError.badRequest
+          ? DomainError.invalidFields
+          : DomainError.Unexpected;
+    }
   }
 }
 
-void main() {
+class HttpClientSpy extends Mock implements HttpClient {}
 
+void main() {
   late HttpClientSpy httpclient;
   late String url;
   late PostData sout;
   late IdunDataEntity idunDataEntity;
 
   When mockRequest() {
-    return when(()=> httpclient.request(url: any(named: "url"), method: any(named: "method")));
+    return when(() => httpclient.request(
+        url: any(named: "url"), method: any(named: "method")));
   }
 
   void mockHttpData() {
     mockRequest().thenAnswer((_) async => idunDataEntity);
   }
 
-  setUp((){
+  void mockHttpError() {
+    mockRequest().thenThrow(HttpError.badRequest);
+  }
+
+  setUp(() {
     httpclient = HttpClientSpy();
     url = faker.internet.httpUrl();
     sout = PostData(httpclient: httpclient, url: url);
@@ -47,9 +61,16 @@ void main() {
   });
 
   test('Should call request client with correct value', () async {
-
     await sout.create(entity: idunDataEntity);
 
     verify(() => httpclient.request(url: url, method: 'post'));
+  });
+
+  test('should return client error 400 invalid fields ', () async {
+    mockHttpError();
+
+    var future = sout.create(entity: idunDataEntity);
+
+    expect(future, throwsA(DomainError.invalidFields));
   });
 }

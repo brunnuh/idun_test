@@ -1,3 +1,4 @@
 enum DomainError{
-  Unexpected
+  Unexpected,
+  invalidFields
 }

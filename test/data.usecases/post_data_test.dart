@@ -32,7 +32,7 @@ class HttpClientSpy extends Mock implements HttpClient {}
 void main() {
   late HttpClientSpy httpclient;
   late String url;
-  late PostData sout;
+  late PostData sut;
   late IdunDataEntity idunDataEntity;
 
   When mockRequest() {
@@ -44,14 +44,14 @@ void main() {
     mockRequest().thenAnswer((_) async => idunDataEntity);
   }
 
-  void mockHttpError() {
-    mockRequest().thenThrow(HttpError.badRequest);
+  void mockHttpError(HttpError error) {
+    mockRequest().thenThrow(error);
   }
 
   setUp(() {
     httpclient = HttpClientSpy();
     url = faker.internet.httpUrl();
-    sout = PostData(httpclient: httpclient, url: url);
+    sut = PostData(httpclient: httpclient, url: url);
     idunDataEntity = IdunDataEntity(
       guid: faker.guid.guid(),
       text: faker.lorem.sentence(),
@@ -61,16 +61,24 @@ void main() {
   });
 
   test('Should call request client with correct value', () async {
-    await sout.create(entity: idunDataEntity);
+    await sut.create(entity: idunDataEntity);
 
     verify(() => httpclient.request(url: url, method: 'post'));
   });
 
   test('should return client error 400 invalid fields ', () async {
-    mockHttpError();
+    mockHttpError(HttpError.badRequest);
 
-    var future = sout.create(entity: idunDataEntity);
+    var future = sut.create(entity: idunDataEntity);
 
     expect(future, throwsA(DomainError.invalidFields));
+  });
+
+  test("should return client error 404 with invalid url", () {
+    mockHttpError(HttpError.NotFound);
+
+    final future = sut.create(entity: idunDataEntity);
+
+    expect(future, throwsA(DomainError.Unexpected));
   });
 }

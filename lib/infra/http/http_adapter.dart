@@ -28,7 +28,6 @@ class HttpAdapter implements HttpClient{
     }else if(method == "post"){
       response = await client.post(url, data: body);
     }
-
     return _handleResponse(response);
   }
 

@@ -4,6 +4,7 @@ import 'package:faker/faker.dart';
 import 'package:idun_test/data/http/http.dart';
 import 'package:idun_test/data/models/data_model.dart';
 import 'package:idun_test/domain/entities/entities.dart';
+import 'package:idun_test/domain/helpers/domain_error.dart';
 import 'package:idun_test/infra/http/http_adapter.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
@@ -40,6 +41,10 @@ void main() {
         data: data,
       ),
     );
+  }
+
+  void mockHttpError(HttpError error) {
+    mockPost(url, {"any_key" : "any_value"}).thenThrow(error);
   }
 
   setUpAll((){
@@ -82,5 +87,15 @@ void main() {
 
       verify(() => client.post(url, data: body));
     });
+
+    test('should return NotFound if client return 404',(){
+      mockHttpError(HttpError.NotFound);
+
+      var future = sut.request(url: url, method: "post", body: {"any_key" : "any_value"});
+
+      expect(future, throwsA(HttpError.NotFound));
+    });
+
+
   });
 }

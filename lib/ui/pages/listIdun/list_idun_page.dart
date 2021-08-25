@@ -4,10 +4,9 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:idun_test/presentation/presenters/mobx_list_idun_presenter.dart';
-import 'package:idun_test/ui.components/pages/formIdun/form_idun_page.dart';
+import 'package:idun_test/ui/pages/formIdun/form_idun_page.dart';
 
-import 'package:idun_test/ui.components/pages/listIdun/components/list_item_component.dart';
-import 'package:mobx/mobx.dart';
+import 'package:idun_test/ui/pages/listIdun/components/list_item_component.dart';
 
 import 'components/show_erro_message.dart';
 

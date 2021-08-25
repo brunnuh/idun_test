@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'setup_locator.dart';
 
-import '../ui.components/pages/listIdun/list_idun_page.dart';
+import '../ui/pages/listIdun/list_idun_page.dart';
 
 
 void main() {

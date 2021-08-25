@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:idun_test/presentation/presenters/mobx_fields_idun_presenter.dart';
 import 'package:idun_test/ui/components/show_erro_message.dart';
+import 'package:idun_test/ui/pages/formIdun/components/show_date_picker.dart';
 import 'package:idun_test/ui/pages/formIdun/components/text_form_field_custom.dart';
 import 'package:mobx/mobx.dart';
 
@@ -70,13 +71,10 @@ class _FormIdunPageState extends State<FormIdunPage> {
                       ),
                       TextButton(
                         onPressed: () async {
-                          var dt = (await showDatePicker(
-                            context: context,
-                            initialDate: mobxFieldsIdunPresenter.dateTime,
-                            firstDate: DateTime(1111),
-                            lastDate: DateTime(2999),
-                          ))!;
-                          mobxFieldsIdunPresenter.setDateTime(dt);
+                          showDatepicker(context, DateTime.now()).then((DateTime? value){
+                            mobxFieldsIdunPresenter.setDateTime(value!);
+                          });
+
                         },
                         child: Text(
                             "Selecione uma data: ${mobxFieldsIdunPresenter.dateTime.dateConvert}"),

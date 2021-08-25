@@ -22,6 +22,9 @@ abstract class _MobxFieldsIdunPresenter with Store{
   @observable
   String? error;
 
+  @observable
+  bool isLoading = false;
+
   final guid = faker.guid.guid();
 
   @observable
@@ -36,11 +39,19 @@ abstract class _MobxFieldsIdunPresenter with Store{
   @action
   Future<void> postField() async {
     error = null;
+    isLoading = true;
     try{
       await postData.create(entity: IdunDataEntity(guid: guid, text: text!, date: dateTime));
     }on DomainError catch(e){
       error = e == DomainError.invalidFields ? "Campo invalido" : "Algo Inesperado Aconteceu";
     }
+    isLoading = false;
+  }
+
+  @action
+  void resetFields(){
+    text = null;
+    dateTime = DateTime.now();
   }
 
 

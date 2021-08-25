@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:idun_test/presentation/presenters/mobx_fields_idun_presenter.dart';
+import 'package:idun_test/presentation/presenters/mobx_list_idun_presenter.dart';
 import 'package:idun_test/ui/components/show_erro_message.dart';
 import 'package:idun_test/ui/pages/formIdun/components/show_date_picker.dart';
 import 'package:idun_test/ui/pages/formIdun/components/text_form_field_custom.dart';
@@ -17,6 +18,8 @@ class FormIdunPage extends StatefulWidget {
 class _FormIdunPageState extends State<FormIdunPage> {
   MobxFieldsIdunPresenter mobxFieldsIdunPresenter =
       GetIt.instance<MobxFieldsIdunPresenter>();
+  MobxListIdunPresenter mobxListIdunPresenter =
+      GetIt.instance<MobxListIdunPresenter>();
 
   @override
   void initState() {
@@ -39,7 +42,7 @@ class _FormIdunPageState extends State<FormIdunPage> {
         ),
         body: WillPopScope(
           onWillPop: () async {
-            mobxFieldsIdunPresenter.setText(null);
+            mobxFieldsIdunPresenter.resetFields();
             return true;
           },
           child: SingleChildScrollView(
@@ -47,6 +50,14 @@ class _FormIdunPageState extends State<FormIdunPage> {
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               child: Observer(
                 builder: (_) {
+                  if (mobxFieldsIdunPresenter.isLoading) {
+                    return Container(
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
                   return Column(
                     children: [
                       const SizedBox(
@@ -71,10 +82,10 @@ class _FormIdunPageState extends State<FormIdunPage> {
                       ),
                       TextButton(
                         onPressed: () async {
-                          showDatepicker(context, DateTime.now()).then((DateTime? value){
+                          showDatepicker(context, DateTime.now())
+                              .then((DateTime? value) {
                             mobxFieldsIdunPresenter.setDateTime(value!);
                           });
-
                         },
                         child: Text(
                             "Selecione uma data: ${mobxFieldsIdunPresenter.dateTime.dateConvert}"),
@@ -85,6 +96,11 @@ class _FormIdunPageState extends State<FormIdunPage> {
                             ? () async {
                                 FocusScope.of(context).unfocus();
                                 await mobxFieldsIdunPresenter.postField();
+                                if (mobxFieldsIdunPresenter.error == null) {
+                                  mobxFieldsIdunPresenter.resetFields();
+                                  mobxListIdunPresenter.getListPosts();
+                                  Navigator.of(context).pop();
+                                }
                               }
                             : null,
                         child: Text("Enviar"),

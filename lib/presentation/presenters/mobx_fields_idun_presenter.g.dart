@@ -54,6 +54,21 @@ mixin _$MobxFieldsIdunPresenter on _MobxFieldsIdunPresenter, Store {
     });
   }
 
+  final _$isLoadingAtom = Atom(name: '_MobxFieldsIdunPresenter.isLoading');
+
+  @override
+  bool get isLoading {
+    _$isLoadingAtom.reportRead();
+    return super.isLoading;
+  }
+
+  @override
+  set isLoading(bool value) {
+    _$isLoadingAtom.reportWrite(value, super.isLoading, () {
+      super.isLoading = value;
+    });
+  }
+
   final _$dateTimeAtom = Atom(name: '_MobxFieldsIdunPresenter.dateTime');
 
   @override
@@ -103,10 +118,22 @@ mixin _$MobxFieldsIdunPresenter on _MobxFieldsIdunPresenter, Store {
   }
 
   @override
+  void resetFields() {
+    final _$actionInfo = _$_MobxFieldsIdunPresenterActionController.startAction(
+        name: '_MobxFieldsIdunPresenter.resetFields');
+    try {
+      return super.resetFields();
+    } finally {
+      _$_MobxFieldsIdunPresenterActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 text: ${text},
 error: ${error},
+isLoading: ${isLoading},
 dateTime: ${dateTime},
 textError: ${textError},
 formValidat: ${formValidat}

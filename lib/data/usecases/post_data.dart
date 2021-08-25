@@ -15,7 +15,7 @@ class PostData {
       final body = DataModel.fromDomain(entity).toJson();
       final response = await httpclient.request(url: url, method: 'post', body: body);
       return DataModel.fromJson(response).toEntity();
-    } on HttpError catch (e) {
+    } catch (e) {
       throw e == HttpError.badRequest
           ? DomainError.invalidFields
           : DomainError.Unexpected;

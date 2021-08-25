@@ -8,7 +8,7 @@ import 'package:idun_test/ui/pages/formIdun/form_idun_page.dart';
 
 import 'package:idun_test/ui/pages/listIdun/components/list_item_component.dart';
 
-import 'components/show_erro_message.dart';
+import '../../components/show_erro_message.dart';
 
 class ListIdunPage extends StatefulWidget {
   @override

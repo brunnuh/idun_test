@@ -14,7 +14,6 @@ class _FormIdunPageState extends State<FormIdunPage> {
   MobxFieldsIdunPresenter mobxFieldsIdunPresenter =
       GetIt.instance<MobxFieldsIdunPresenter>();
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,7 +79,11 @@ class _FormIdunPageState extends State<FormIdunPage> {
                     ),
                     const Divider(),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: mobxFieldsIdunPresenter.formValidat
+                          ? () {
+                              print("funcionando");
+                            }
+                          : null,
                       child: Text("Enviar"),
                     )
                   ],

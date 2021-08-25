@@ -16,6 +16,13 @@ mixin _$MobxFieldsIdunPresenter on _MobxFieldsIdunPresenter, Store {
       (_$textErrorComputed ??= Computed<String?>(() => super.textError,
               name: '_MobxFieldsIdunPresenter.textError'))
           .value;
+  Computed<bool>? _$formValidatComputed;
+
+  @override
+  bool get formValidat =>
+      (_$formValidatComputed ??= Computed<bool>(() => super.formValidat,
+              name: '_MobxFieldsIdunPresenter.formValidat'))
+          .value;
 
   final _$textAtom = Atom(name: '_MobxFieldsIdunPresenter.text');
 
@@ -77,7 +84,8 @@ mixin _$MobxFieldsIdunPresenter on _MobxFieldsIdunPresenter, Store {
     return '''
 text: ${text},
 dateTime: ${dateTime},
-textError: ${textError}
+textError: ${textError},
+formValidat: ${formValidat}
     ''';
   }
 }

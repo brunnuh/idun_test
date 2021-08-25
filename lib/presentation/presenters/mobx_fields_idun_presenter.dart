@@ -29,4 +29,7 @@ abstract class _MobxFieldsIdunPresenter with Store{
     return null;
   }
 
+  @computed
+  bool get formValidat => text != null && text!.isNotEmpty;
+
 }

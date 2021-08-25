@@ -25,7 +25,7 @@ abstract class _MobxFieldsIdunPresenter with Store{
   @observable
   bool isLoading = false;
 
-  final guid = faker.guid.guid();
+  String guid = faker.guid.guid();
 
   @observable
   DateTime dateTime = DateTime.now();
@@ -52,6 +52,7 @@ abstract class _MobxFieldsIdunPresenter with Store{
   void resetFields(){
     text = null;
     dateTime = DateTime.now();
+    guid = faker.guid.guid();
   }
 
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:idun_test/presentation/presenters/mobx_fields_idun_presenter.dart';
+import 'package:mobx/mobx.dart';
 
 import '/domain/helpers/helpers.dart';
 
@@ -13,6 +14,20 @@ class FormIdunPage extends StatefulWidget {
 class _FormIdunPageState extends State<FormIdunPage> {
   MobxFieldsIdunPresenter mobxFieldsIdunPresenter =
       GetIt.instance<MobxFieldsIdunPresenter>();
+
+  @override
+  void initState() {
+    reaction((_) => mobxFieldsIdunPresenter.error, (error) {
+      if (error != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(error.toString()),
+          ),
+        );
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,8 +95,8 @@ class _FormIdunPageState extends State<FormIdunPage> {
                     const Divider(),
                     ElevatedButton(
                       onPressed: mobxFieldsIdunPresenter.formValidat
-                          ? () {
-                              print("funcionando");
+                          ? () async {
+                              await mobxFieldsIdunPresenter.postField();
                             }
                           : null,
                       child: Text("Enviar"),

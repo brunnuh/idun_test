@@ -39,6 +39,21 @@ mixin _$MobxFieldsIdunPresenter on _MobxFieldsIdunPresenter, Store {
     });
   }
 
+  final _$errorAtom = Atom(name: '_MobxFieldsIdunPresenter.error');
+
+  @override
+  String? get error {
+    _$errorAtom.reportRead();
+    return super.error;
+  }
+
+  @override
+  set error(String? value) {
+    _$errorAtom.reportWrite(value, super.error, () {
+      super.error = value;
+    });
+  }
+
   final _$dateTimeAtom = Atom(name: '_MobxFieldsIdunPresenter.dateTime');
 
   @override
@@ -52,6 +67,14 @@ mixin _$MobxFieldsIdunPresenter on _MobxFieldsIdunPresenter, Store {
     _$dateTimeAtom.reportWrite(value, super.dateTime, () {
       super.dateTime = value;
     });
+  }
+
+  final _$postFieldAsyncAction =
+      AsyncAction('_MobxFieldsIdunPresenter.postField');
+
+  @override
+  Future<void> postField() {
+    return _$postFieldAsyncAction.run(() => super.postField());
   }
 
   final _$_MobxFieldsIdunPresenterActionController =
@@ -83,6 +106,7 @@ mixin _$MobxFieldsIdunPresenter on _MobxFieldsIdunPresenter, Store {
   String toString() {
     return '''
 text: ${text},
+error: ${error},
 dateTime: ${dateTime},
 textError: ${textError},
 formValidat: ${formValidat}

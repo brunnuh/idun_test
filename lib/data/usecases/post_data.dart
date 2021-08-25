@@ -12,6 +12,7 @@ class PostData {
 
   Future<IdunDataEntity> create({required IdunDataEntity entity}) async {
     try {
+      throw DomainError.invalidFields;
       final body = DataModel.fromDomain(entity).toJson();
       final response = await httpclient.request(url: url, method: 'post', body: body);
       return DataModel.fromJson(response).toEntity();

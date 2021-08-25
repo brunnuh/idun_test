@@ -1,14 +1,26 @@
 import 'package:mobx/mobx.dart';
 import 'package:faker/faker.dart';
 
+import '../../domain/entities/entities.dart';
+import '../../domain/helpers/helpers.dart';
+
+import '../../data/usecases/usecases.dart';
+
 part 'mobx_fields_idun_presenter.g.dart';
 
 class MobxFieldsIdunPresenter = _MobxFieldsIdunPresenter with _$MobxFieldsIdunPresenter;
 
 abstract class _MobxFieldsIdunPresenter with Store{
 
+  final PostData postData;
+
+  _MobxFieldsIdunPresenter({required this.postData});
+
   @observable
   String? text;
+
+  @observable
+  String? error;
 
   final guid = faker.guid.guid();
 
@@ -20,6 +32,17 @@ abstract class _MobxFieldsIdunPresenter with Store{
 
   @action
   void setDateTime(DateTime value) => dateTime = value;
+
+  @action
+  Future<void> postField() async {
+    error = null;
+    try{
+      await postData.create(entity: IdunDataEntity(guid: guid, text: text!, date: dateTime));
+    }on DomainError catch(e){
+      error = e == DomainError.invalidFields ? "Campo invalido" : "Algo Inesperado Aconteceu";
+    }
+  }
+
 
   @computed
   String? get textError{

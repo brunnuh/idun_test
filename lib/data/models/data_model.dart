@@ -27,7 +27,7 @@ class DataModel {
   factory DataModel.fromDomain(IdunDataEntity entity) {
     return DataModel(
       guid: entity.guid,
-      text: entity.guid,
+      text: entity.text,
       date: entity.date.toIso8601String(),
     );
   }
